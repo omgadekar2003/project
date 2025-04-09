@@ -19,20 +19,22 @@ CREATE TABLE admins (
 );
 */
 
-/*
- CREATE TABLE products (
+CREATE TABLE products (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   description TEXT,
-  price NUMERIC NOT NULL,
+  old_price INTEGER,                  -- Old MRP
+  discount_price INTEGER,            -- Discounted amount (or difference)
+  discount VARCHAR(50),              -- e.g., "30% OFF"
   category VARCHAR(100),
   stock INTEGER DEFAULT 0,
-  image TEXT, -- Added column to store Base64 image string
+  image TEXT,                         -- Image URL or Base64 string
+  size TEXT[],                        -- Array to store sizes like ['S', 'M', 'L']
+  color VARCHAR(50),                 -- e.g., 'Red', 'Black', 'Blue'
+  quantity INTEGER,                 -- User’s order quantity
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-*/
 
 
 

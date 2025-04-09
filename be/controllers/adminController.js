@@ -21,10 +21,16 @@ const adminLogin = async (req, res) => {
       maxAge: 86400000, // 1 day
     });
 
-    res.json({ message: "Admin logged in successfully" });
+    res.json({ message: "Admin logged in successfully" ,token});
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-module.exports = { adminLogin };
+// ✅ Admin Logout
+const adminLogout = (req, res) => {
+  res.clearCookie("adminToken");
+  res.json({ message: "Admin logged out successfully" });
+};
+
+module.exports = { adminLogin, adminLogout };
