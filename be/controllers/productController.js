@@ -4,7 +4,8 @@ const {
   addProduct,
   updateProduct,
   deleteProduct,
-  getProductsByCategory, // ⬅️ Import added
+  getProductsByCategory,
+  searchProducts // ⬅️ Import added
 } = require("../models/productModel");
 
 // ...existing controllers...
@@ -79,11 +80,47 @@ const fetchProductsByCategory = async (req, res) => {
   }
 };
 
+
+
+// Controller to handle product search by name
+const searchProductsByName = async (req, res) => {
+  const { keyword } = req.query;
+
+  // If no keyword provided, return error
+  if (!keyword) {
+    return res.status(400).json({ message: "Search keyword is required" });
+  }
+
+  try {
+    // Call model function to search products
+    const products = await searchProducts(keyword);
+
+    // If no matches found
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found for the given keyword." });
+    }
+
+    // Return the matched products
+    res.json(products);
+  } catch (err) {
+    // Error handling
+    console.error("Error searching products:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {
+  // ... other exports
+  searchProductsByName, // Export the new controller
+};
+
+
 module.exports = {
   createProduct,
   getProducts,
   getProduct,
   editProduct,
   removeProduct,
-  fetchProductsByCategory, // ⬅️ Added export
+  fetchProductsByCategory,
+  searchProductsByName // ⬅️ Added export
 };

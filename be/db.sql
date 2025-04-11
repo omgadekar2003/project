@@ -21,20 +21,21 @@ CREATE TABLE admins (
 
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name TEXT NOT NULL,
   description TEXT,
-  old_price INTEGER,                  -- Old MRP
-  discount_price INTEGER,            -- Discounted amount (or difference)
-  discount VARCHAR(50),              -- e.g., "30% OFF"
-  category VARCHAR(100),
+  old_price NUMERIC(10, 2),
+  discount_price NUMERIC(10, 2),
+  discount INTEGER,
+  category TEXT NOT NULL,           -- Men, Women, Kids
+  parent_category TEXT NOT NULL,    -- Casual wear, Formal wear, etc.
+  sub_category TEXT NOT NULL,       -- T-shirts, Suits, Sarees, etc.
   stock INTEGER DEFAULT 0,
-  image TEXT,                         -- Image URL or Base64 string
-  size TEXT[],                        -- Array to store sizes like ['S', 'M', 'L']
-  color VARCHAR(50),                 -- e.g., 'Red', 'Black', 'Blue'
-  quantity INTEGER,                 -- User’s order quantity
+  image TEXT,
+  size TEXT,                        -- M, L, XL, etc.
+  color TEXT,
+  quantity INTEGER DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 
 
 

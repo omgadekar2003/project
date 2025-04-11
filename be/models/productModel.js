@@ -116,6 +116,23 @@ const getProductsByCategory = async (category, parent_category, sub_category) =>
   return result.rows;
 };
 
+// Function to search products by keyword in name (case-insensitive)
+const searchProducts = async (keyword) => {
+  const result = await pool.query(
+    // ILIKE for case-insensitive search; %keyword% pattern for partial match
+    "SELECT * FROM products WHERE name ILIKE '%' || $1 || '%'",
+    [keyword]
+  );
+  return result.rows; // return array of matched rows
+};
+
+module.exports = {
+  // ... other exports
+  searchProducts, // Export the new search function
+};
+
+
+
 
 
 module.exports = {
@@ -124,7 +141,9 @@ module.exports = {
   addProduct,
   updateProduct,
   deleteProduct,
-  getProductsByCategory, // ⬅️ Added export
+  getProductsByCategory,
+  searchProducts
+   // ⬅️ Added export
 };
 
 
