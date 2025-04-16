@@ -9,6 +9,7 @@ const profileRoutes = require("./routes/profileRoutes");  // user profile.
 const adminRoutes = require("./routes/adminRoutes");       // ✅ Admin Login
 const productRoutes = require("./routes/productRoutes");   // ✅ Product CRUD + Public View
 const cartRoutes = require("./routes/cartRoutes"); // 🛒 Cart route
+const wishlistRoutes = require("./routes/wishlistRoutes"); // 💖 Wishlist route
 
 dotenv.config();
 
@@ -31,7 +32,8 @@ app.use("/api/auth", authRoutes);           // User register/login
 app.use("/api/user", profileRoutes);        // User profile + update
 app.use("/api/admin", adminRoutes);         // Admin login
 app.use("/api/products", productRoutes);    // Product CRUD + View
-app.use("/api/cart", cartRoutes);           // product to cart + CRUD + VIEW
+app.use("/api/cart", cartRoutes);           // product to cart + CRUD
+app.use("/api/wishlist", wishlistRoutes);   // product add to wishlist + CRUD
 
 // Server
 const PORT = process.env.PORT || 5000;
