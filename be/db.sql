@@ -38,6 +38,29 @@ CREATE TABLE products (
 );
 
 
+-- add to cart:
+
+CREATE TABLE cart_items (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  product_id INTEGER REFERENCES products(id),
+  quantity INTEGER NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- wishlist:
+
+
+CREATE TABLE wishlist_items (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  product_id INTEGER REFERENCES products(id),
+  quantity INTEGER NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+--
 
 
 
