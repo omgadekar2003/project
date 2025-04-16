@@ -126,14 +126,6 @@ const searchProducts = async (keyword) => {
   return result.rows; // return array of matched rows
 };
 
-module.exports = {
-  // ... other exports
-  searchProducts, // Export the new search function
-};
-
-
-
-
 
 module.exports = {
   getAllProducts,

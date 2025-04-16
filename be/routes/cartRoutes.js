@@ -1,15 +1,16 @@
-// const express = require("express");
-// const router = express.Router();
-// const authenticateUser = require("../middleware/authenticateUser");
-// const {
-//   addToCart,
-//   getUserCart,
-//   removeFromCart,
-// } = require("../controllers/cartController");
+const express = require("express");
+const router = express.Router();
+const authenticateUser = require("../middlewares/authmiddleware.js");
 
-// // All routes are protected
-// router.post("/cart", authenticateUser, addToCart);
-// router.get("/cart", authenticateUser, getUserCart);
-// router.delete("/cart/:itemId", authenticateUser, removeFromCart);
+const {
+  addToCart,
+  getUserCart,
+  removeFromCart,
+} = require("../controllers/cartController");
 
-// module.exports = router;
+// Routes for authenticated users only
+router.post("/cartadd", authenticateUser, addToCart);
+router.get("/cartget", authenticateUser, getUserCart);
+router.delete("/cartdel/:itemId", authenticateUser, removeFromCart);
+
+module.exports = router;
