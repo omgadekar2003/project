@@ -109,11 +109,6 @@ const searchProductsByName = async (req, res) => {
   }
 };
 
-module.exports = {
-  // ... other exports
-  searchProductsByName, // Export the new controller
-};
-
 
 module.exports = {
   createProduct,
