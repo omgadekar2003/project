@@ -19,6 +19,7 @@ CREATE TABLE admins (
 );
 */
 
+/*
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
@@ -36,10 +37,11 @@ CREATE TABLE products (
   quantity INTEGER DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
+*/
 
 -- add to cart:
 
+/*
 CREATE TABLE cart_items (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id),
@@ -47,10 +49,11 @@ CREATE TABLE cart_items (
   quantity INTEGER NOT NULL DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+*/
 
 -- wishlist:
 
-
+/*
 CREATE TABLE wishlist_items (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id),
@@ -58,8 +61,80 @@ CREATE TABLE wishlist_items (
   quantity INTEGER NOT NULL DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+*/
+
+-- function to get all users on admin side:
+/*
+CREATE OR REPLACE FUNCTION get_all_users()
+RETURNS TABLE (
+    id INT,
+    name TEXT,
+    email TEXT,
+    phone TEXT,
+    address TEXT,
+    created_at TIMESTAMP
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT id, name, email, phone, address, created_at FROM users;
+END;
+$$ LANGUAGE plpgsql;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Orders view by admin:
+/*
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    items JSONB NOT NULL,
+    total_price NUMERIC(10, 2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+updated...................
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL,
+    total_cost DECIMAL(10, 2) NOT NULL,
+    payment_method VARCHAR(20) NOT NULL CHECK (payment_method IN ('razorpay', 'cod')),
+    status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'paid', 'failed')),
+    razorpay_order_id VARCHAR(255),
+    razorpay_payment_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+*/
 --
 
 

@@ -10,6 +10,8 @@ const adminRoutes = require("./routes/adminRoutes");       // ✅ Admin Login
 const productRoutes = require("./routes/productRoutes");   // ✅ Product CRUD + Public View
 const cartRoutes = require("./routes/cartRoutes"); // 🛒 Cart route
 const wishlistRoutes = require("./routes/wishlistRoutes"); // 💖 Wishlist route
+const userRoutes = require("./routes/userRoutes");    // during checkout and pay user can update Address & admin user calls
+const checkoutRoutes = require("./routes/checkoutRoutes"); // ⬅️ Checkout for Payment
 
 dotenv.config();
 
@@ -34,6 +36,9 @@ app.use("/api/admin", adminRoutes);         // Admin login
 app.use("/api/products", productRoutes);    // Product CRUD + View
 app.use("/api/cart", cartRoutes);           // product to cart + CRUD
 app.use("/api/wishlist", wishlistRoutes);   // product add to wishlist + CRUD
+app.use("/api/users", userRoutes);          // Update or Address before payment
+app.use("/api/checkout", checkoutRoutes);   // ⬅️ store Tem Session Info for Next Page
+app.use('/api/users', userRoutes);          // for getting all users on admin side 
 
 // Server
 const PORT = process.env.PORT || 5000;

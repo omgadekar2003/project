@@ -25,18 +25,31 @@ const updateWishlistItemQuantity = (quantity, user_id, product_id) => {
 };
 
 // Get all wishlist items for a user (with product details)
+// const getUserWishlistItems = (userId) => {
+//   return pool.query(
+//     `SELECT 
+//         wi.id AS wishlist_item_id,
+//         wi.quantity,
+//         p.id AS product_id,
+//         p.name AS product_name,
+//         p.discount_price AS product_price,
+//         p.image AS product_image
+//      FROM wishlist_items wi
+//      JOIN products p ON wi.product_id = p.id
+//      WHERE wi.user_id = $1`,
+//     [userId]
+//   );
+// };
+
+// Get all wishlist items for a user (with product details)
 const getUserWishlistItems = (userId) => {
   return pool.query(
-    `SELECT 
-        wi.id AS wishlist_item_id,
-        wi.quantity,
-        p.id AS product_id,
-        p.name AS product_name,
-        p.discount_price AS product_price,
-        p.image AS product_image
-     FROM wishlist_items wi
-     JOIN products p ON wi.product_id = p.id
-     WHERE wi.user_id = $1`,
+    `
+    SELECT wi.id as wishlist_item_id, wi.quantity, p.* 
+    FROM wishlist_items wi
+    JOIN products p ON wi.product_id = p.id
+    WHERE wi.user_id = $1
+  `,
     [userId]
   );
 };
