@@ -1,9 +1,14 @@
-
 const pool = require("../config/db");
 
 // Get all products
 const getAllProducts = async () => {
   const result = await pool.query("SELECT * FROM products ORDER BY id ASC");
+  return result.rows;
+};
+
+// Get all products using a database function
+const getAllProductsFunction = async () => {
+  const result = await pool.query("SELECT * FROM get_all_products()");
   return result.rows;
 };
 
@@ -13,7 +18,7 @@ const getProductById = async (id) => {
   return result.rows[0];
 };
 
-// Add a product
+// Add a new product
 const addProduct = async ({
   name,
   description,
@@ -58,7 +63,7 @@ const addProduct = async ({
   return result.rows[0];
 };
 
-// Update product
+// Update a product by ID
 const updateProduct = async (id, data) => {
   const result = await pool.query(
     `UPDATE products SET 
@@ -96,14 +101,12 @@ const updateProduct = async (id, data) => {
   return result.rows[0];
 };
 
-// Delete product
+// Delete a product by ID
 const deleteProduct = async (id) => {
   await pool.query("DELETE FROM products WHERE id = $1", [id]);
 };
 
-// ...existing code...
-
-// Fetch products by category and sub-category
+// Get products by category, parent category, and sub-category
 const getProductsByCategory = async (category, parent_category, sub_category) => {
   const result = await pool.query(
     `SELECT * FROM products 
@@ -111,31 +114,26 @@ const getProductsByCategory = async (category, parent_category, sub_category) =>
      AND LOWER(parent_category) = LOWER($2) 
      AND LOWER(sub_category) = LOWER($3)`,
     [category, parent_category, sub_category]
-  );  
-
+  );
   return result.rows;
 };
 
-// Function to search products by keyword in name (case-insensitive)
+// Search products by name (case-insensitive)
 const searchProducts = async (keyword) => {
   const result = await pool.query(
-    // ILIKE for case-insensitive search; %keyword% pattern for partial match
     "SELECT * FROM products WHERE name ILIKE '%' || $1 || '%'",
     [keyword]
   );
-  return result.rows; // return array of matched rows
+  return result.rows;
 };
-
 
 module.exports = {
   getAllProducts,
+  getAllProductsFunction,
   getProductById,
   addProduct,
   updateProduct,
   deleteProduct,
   getProductsByCategory,
   searchProducts
-   // ⬅️ Added export
 };
-
-

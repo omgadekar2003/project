@@ -5,12 +5,11 @@ const {
   updateProduct,
   deleteProduct,
   getProductsByCategory,
-  searchProducts // ⬅️ Import added
+  searchProducts,
+  getAllProductsFromFunction, // ✅ renamed for clarity
 } = require("../models/productModel");
 
-// ...existing controllers...
-
-// Create new product
+// Create a new product
 const createProduct = async (req, res) => {
   try {
     const product = await addProduct(req.body);
@@ -31,7 +30,18 @@ const getProducts = async (req, res) => {
   }
 };
 
-// Get single product
+// Get all products using PostgreSQL function
+const getProductsFromFunction = async (req, res) => {
+  try {
+    const products = await getAllProductsFromFunction();
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products from function:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Get single product by ID
 const getProduct = async (req, res) => {
   try {
     const product = await getProductById(req.params.id);
@@ -42,7 +52,7 @@ const getProduct = async (req, res) => {
   }
 };
 
-// Update product
+// Update product by ID
 const editProduct = async (req, res) => {
   try {
     const product = await updateProduct(req.params.id, req.body);
@@ -52,7 +62,7 @@ const editProduct = async (req, res) => {
   }
 };
 
-// Delete product
+// Delete product by ID
 const removeProduct = async (req, res) => {
   try {
     await deleteProduct(req.params.id);
@@ -62,11 +72,10 @@ const removeProduct = async (req, res) => {
   }
 };
 
-// Filter products by parent_category and sub_category
+// Get products filtered by category
 const fetchProductsByCategory = async (req, res) => {
   const { category, parent_category, sub_category } = req.query;
 
-  // All 3 are required
   if (!category || !parent_category || !sub_category) {
     return res.status(400).json({ message: "category, parent_category, and sub_category are required" });
   }
@@ -80,35 +89,27 @@ const fetchProductsByCategory = async (req, res) => {
   }
 };
 
-
-
-// Controller to handle product search by name
+// Search products by name
 const searchProductsByName = async (req, res) => {
   const { keyword } = req.query;
 
-  // If no keyword provided, return error
   if (!keyword) {
     return res.status(400).json({ message: "Search keyword is required" });
   }
 
   try {
-    // Call model function to search products
     const products = await searchProducts(keyword);
 
-    // If no matches found
     if (products.length === 0) {
       return res.status(404).json({ message: "No products found for the given keyword." });
     }
 
-    // Return the matched products
     res.json(products);
   } catch (err) {
-    // Error handling
     console.error("Error searching products:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
 
 module.exports = {
   createProduct,
@@ -117,5 +118,6 @@ module.exports = {
   editProduct,
   removeProduct,
   fetchProductsByCategory,
-  searchProductsByName // ⬅️ Added export
+  searchProductsByName,
+  getProductsFromFunction, // ✅ exported cleanly
 };

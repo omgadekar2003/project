@@ -63,6 +63,50 @@ CREATE TABLE wishlist_items (
 );
 */
 
+-- function to get all users on admin side:
+/*
+CREATE OR REPLACE FUNCTION get_all_users()
+RETURNS TABLE (
+    id INT,
+    name TEXT,
+    email TEXT,
+    phone TEXT,
+    address TEXT,
+    created_at TIMESTAMP
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT id, name, email, phone, address, created_at FROM users;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- Orders view by admin:
 /*
 CREATE TABLE orders (

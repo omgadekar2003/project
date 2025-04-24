@@ -1,7 +1,10 @@
 const {
     getUserAddressById,
     updateUserAddressById,
+    
   } = require("../models/userModel");
+
+  const { getAllUsers } = require("../models/userModel");
   
   // GET /api/users/address
   const getUserAddress = async (req, res) => {
@@ -47,8 +50,19 @@ const {
     }
   };
   
+// get all users for admin to see on dashboard
+const getAllUsersController = async (req, res) => {
+  try {
+    const users = await getAllUsers(); // call directly
+    res.status(200).json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+};
   module.exports = {
     getUserAddress,
     updateUserAddress,
+    getAllUsersController
   };
   

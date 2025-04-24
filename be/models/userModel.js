@@ -13,7 +13,13 @@ const updateUserAddressById = async (userId, newAddress) => {
   return result.rows[0]?.address;
 };
 
+const getAllUsers = async () => {
+  const result = await pool.query('SELECT * FROM get_all_users()');
+  return result.rows;
+};
+
 module.exports = {
   getUserAddressById,
   updateUserAddressById,
+  getAllUsers
 };
