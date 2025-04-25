@@ -1,34 +1,33 @@
 const {
     getUserAddressById,
     updateUserAddressById,
-    
+    getAllUsers
   } = require("../models/userModel");
 
-  const { getAllUsers } = require("../models/userModel");
-  
+    
   // GET /api/users/address
   const getUserAddress = async (req, res) => {
     try {
       const userId = req.user.userId;
-      const address = await getUserAddressById(userId);
+      const userData = await getUserAddressById(userId);
   
-      // If user not found (just being extra safe)
-      if (address === undefined) {
+      if (!userData) {
         return res.status(404).json({ message: "User not found" });
       }
   
-      // If address is null or empty in DB
-      if (!address) {
-        return res.status(200).json({ address: [] });
-      }
+      const { name, phone_number, address } = userData;
   
-      // Valid address found
-      res.status(200).json({ address });
+      res.status(200).json({
+        name,
+        phone_number,
+        address: address || [],
+      });
     } catch (error) {
       console.error("Get address error:", error);
       res.status(500).json({ message: "Server Error" });
     }
   };
+  
   
   
   // PUT /api/users/update-address
