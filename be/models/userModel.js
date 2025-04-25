@@ -1,9 +1,13 @@
 const pool = require("../config/db");
 
 const getUserAddressById = async (userId) => {
-  const result = await pool.query("SELECT address FROM users WHERE id = $1", [userId]);
-  return result.rows[0]?.address || null;
+  const result = await pool.query(
+    "SELECT name, phone_number, address FROM users WHERE id = $1",
+    [userId]
+  );
+  return result.rows[0] || null;
 };
+
 
 const updateUserAddressById = async (userId, newAddress) => {
   const result = await pool.query(
