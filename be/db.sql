@@ -110,17 +110,6 @@ $$ LANGUAGE plpgsql;
 -- Orders view by admin:
 /*
 CREATE TABLE orders (
-    order_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    items JSONB NOT NULL,
-    total_price NUMERIC(10, 2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-updated...................
-
-CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
@@ -134,10 +123,47 @@ CREATE TABLE orders (
 );
 
 
-*/
+*/ */
+
+
+
 --
 
+✅ 1. Database Changes
+Since your summary contains multiple products, we need to normalize this with a new order_items table.
 
+🗂️ Updated Table Structure
+orders table (1 row per order):
+sql
+Copy
+Edit
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  address TEXT NOT NULL,
+  total_cost DECIMAL(10, 2) NOT NULL,
+  payment_method VARCHAR(20) NOT NULL CHECK (payment_method IN ('razorpay', 'cod')),
+  status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'paid', 'failed')),
+  razorpay_order_id VARCHAR(255),
+  razorpay_payment_id VARCHAR(255),
+  arrival_date TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+order_items table (1 row per product in that order):
+sql
+Copy
+Edit
+CREATE TABLE order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+  product_id INTEGER REFERENCES products(id),
+  product_name TEXT NOT NULL,
+  product_image TEXT,
+  price DECIMAL(10, 2) NOT NULL,
+  quantity INTEGER NOT NULL,
+  delivery_charge DECIMAL(10, 2) DEFAULT 0,
+  total DECIMAL(10, 2) NOT NULL
+);
 
 
 
