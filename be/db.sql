@@ -83,61 +83,32 @@ $$ LANGUAGE plpgsql;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- Orders view by admin:
 /*
 CREATE TABLE orders (
-    order_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    items JSONB NOT NULL,
-    total_price NUMERIC(10, 2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-updated...................
-
-CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
-    quantity INTEGER NOT NULL,
-    total_cost DECIMAL(10, 2) NOT NULL,
-    payment_method VARCHAR(20) NOT NULL CHECK (payment_method IN ('razorpay', 'cod')),
-    status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'paid', 'failed')),
-    razorpay_order_id VARCHAR(255),
-    razorpay_payment_id VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  product_name VARCHAR(255) NOT NULL,
+  product_image TEXT,
+  price NUMERIC(10,2) NOT NULL,
+  quantity INTEGER NOT NULL,
+  total_cost NUMERIC(10,2) NOT NULL,
+  payment_method VARCHAR(50) NOT NULL,         -- "razorpay" or "cod"
+  address TEXT NOT NULL,
+  status VARCHAR(50) DEFAULT 'pending',        -- "pending", "paid", "done"
+  razorpay_order_id VARCHAR(255),
+  razorpay_payment_id VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
-*/
---
+
+select * from orders
 
 
+*/ */
 
 
 

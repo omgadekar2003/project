@@ -12,6 +12,10 @@ const cartRoutes = require("./routes/cartRoutes"); // 🛒 Cart route
 const wishlistRoutes = require("./routes/wishlistRoutes"); // 💖 Wishlist route
 const userRoutes = require("./routes/userRoutes");    // during checkout and pay user can update Address & admin user calls
 const checkoutRoutes = require("./routes/checkoutRoutes"); // ⬅️ Checkout for Payment
+const orderRoutes = require("./routes/orderRoutes");  // not working !
+const codRoutes = require("./routes/codRoutes");    // for cash on delivery post data.
+const onlinePaymentRoutes = require("./routes/onlinePaymentRoutes"); // RAZORPAY for Payments.
+
 
 dotenv.config();
 
@@ -39,6 +43,9 @@ app.use("/api/wishlist", wishlistRoutes);   // product add to wishlist + CRUD
 app.use("/api/users", userRoutes);          // Update or Address before payment
 app.use("/api/checkout", checkoutRoutes);   // ⬅️ store Tem Session Info for Next Page
 app.use('/api/users', userRoutes);          // for getting all users on admin side 
+app.use("/api/orders", orderRoutes);        // ** not working !
+app.use("/api/pay", codRoutes);             // codroutes 
+app.use("/api/onlinepay", onlinePaymentRoutes); // RAZORPAY Payments.
 
 // Server
 const PORT = process.env.PORT || 5000;
