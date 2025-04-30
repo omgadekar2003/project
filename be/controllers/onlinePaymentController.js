@@ -22,17 +22,25 @@ const createRazorpayOrder = async (req, res) => {
 
     const order = await razorpay.orders.create(options);
 
-    res.status(201).json({ orderId: order.id, amount: order.amount, currency: order.currency });
+    res.status(201).json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to create Razorpay order", error: error.message });
+    res.status(500).json({
+      message: "Failed to create Razorpay order",
+      error: error.message,
+    });
   }
 };
 
 // 2. Place Order after Payment success
 const placeOnlineOrder = async (req, res) => {
   try {
-    const { products, address, razorpay_order_id, razorpay_payment_id } = req.body;
+    const { products, address, razorpay_order_id, razorpay_payment_id } =
+      req.body;
     const userId = req.user.userId;
 
     if (!products || products.length === 0) {
@@ -58,11 +66,19 @@ const placeOnlineOrder = async (req, res) => {
 
     const newOrder = await onlinePaymentModel.insertOnlineOrder(orderData);
 
-    res.status(201).json({ message: "Order placed successfully", order: newOrder });
+    res
+      .status(201)
+      .json({ message: "Order placed successfully", order: newOrder });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to place order", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to place order", error: error.message });
   }
 };
 
-module.exports = { createRazorpayOrder, placeOnlineOrder };
+const getRazorpayKey = (req, res) => {
+  res.status(200).json({ key: process.env.RAZORPAY_KEY_ID });
+};
+
+module.exports = { createRazorpayOrder, placeOnlineOrder, getRazorpayKey };
