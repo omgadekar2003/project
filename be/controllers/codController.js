@@ -1,4 +1,6 @@
 const codModel = require("../models/codModel");
+const cartModel = require("../models/cartModel");
+
 
 const placeOrder = async (req, res) => {
   try {
@@ -27,6 +29,10 @@ const placeOrder = async (req, res) => {
     };
 
     const newOrder = await codModel.insertOrder(orderData);
+
+    
+    // 🔁 REMOVE PURCHASED PRODUCT FROM CART
+    await cartModel.removeItemsFromCart(userId, [product.product_id]);
 
     res.status(201).json({ message: "Order placed successfully", order: newOrder });
   } catch (error) {

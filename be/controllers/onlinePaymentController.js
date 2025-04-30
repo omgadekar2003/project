@@ -1,5 +1,7 @@
 const Razorpay = require("razorpay");
 const onlinePaymentModel = require("../models/onlinePaymentModel");
+const cartModel = require("../models/cartModel");
+
 
 // Create Razorpay instance
 const razorpay = new Razorpay({
@@ -65,6 +67,10 @@ const placeOnlineOrder = async (req, res) => {
     };
 
     const newOrder = await onlinePaymentModel.insertOnlineOrder(orderData);
+
+    
+    // 🔁 REMOVE PURCHASED PRODUCT FROM CART
+    await cartModel.removeItemsFromCart(userId, [product.product_id]);
 
     res
       .status(201)

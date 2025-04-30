@@ -104,10 +104,23 @@ const deleteCartItem = (itemId) => {
   return pool.query("DELETE FROM cart_items WHERE id = $1", [itemId]);
 };
 
+// Remove multiple items from cart based on user_id and array of product_ids
+const removeItemsFromCart = async (userId, productIds) => {
+  if (!Array.isArray(productIds) || productIds.length === 0) return;
+
+  const query = `
+    DELETE FROM cart_items
+    WHERE user_id = $1 AND product_id = ANY($2::int[])
+  `;
+  return pool.query(query, [userId, productIds]);
+};
+
+
 module.exports = {
   findCartItem,
   insertCartItem,
   updateCartItemQuantity,
   getUserCartItems,
   deleteCartItem,
+  removeItemsFromCart,
 };
