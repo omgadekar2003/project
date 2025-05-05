@@ -143,7 +143,29 @@ INSERT INTO products (id, name, description, old_price, discount_price, discount
 */
 
 
+-- updated: products table for multiple images: 
 
-
-
+/*
+CREATE TABLE products2 (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  old_price NUMERIC(10, 2),
+  discount_price NUMERIC(10, 2),
+  discount INTEGER,
+  category TEXT NOT NULL,           -- Men, Women, Kids
+  parent_category TEXT NOT NULL,    -- Casual wear, Formal wear, etc.
+  sub_category TEXT NOT NULL,       -- T-shirts, Suits, Sarees, etc.
+  stock INTEGER DEFAULT 0,
+  image TEXT,
+  size TEXT,                        -- M, L, XL, etc.
+  color TEXT,
+  quantity INTEGER DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  image2 TEXT,
+  image3 TEXT,
+  image4 TEXT,
+  image5 TEXT
+);
+*/
 

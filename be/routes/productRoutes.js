@@ -1,3 +1,4 @@
+
 const express = require("express");
 const pool = require("../config/db");
 const router = express.Router();
@@ -45,3 +46,57 @@ router.get('/products', async (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
+/***************/
+
+// new code for multiple images:
+
+/*
+const express = require("express");
+const pool = require("../config/db");
+const router = express.Router();
+const {
+  createProduct,
+  getProducts,
+  getProduct,
+  editProduct,
+  removeProduct,
+  fetchProductsByCategory,
+  searchProductsByName,
+  getProductsFromFunction
+} = require("../controllers/productController");
+const verifyAdmin = require("../middlewares/adminAuth");
+
+// Public routes
+router.get("/search", searchProductsByName);
+router.get("/", getProducts);
+router.get("/filter", fetchProductsByCategory);
+router.get("/function", getProductsFromFunction);
+router.get("/:id", getProduct);
+
+// Admin routes
+router.post("/", verifyAdmin, createProduct);
+router.put("/:id", verifyAdmin, editProduct);
+router.delete("/:id", verifyAdmin, removeProduct);
+
+// Extra route using pool directly (excluding image2, image3, image4, image5)
+router.get('/products', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, name, description, old_price, discount_price, discount, 
+              category, parent_category, sub_category, stock, image, size, 
+              color, quantity, created_at 
+       FROM get_all_products()`
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+module.exports = router;
+*/
