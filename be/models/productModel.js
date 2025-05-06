@@ -1,3 +1,6 @@
+// current one:
+
+/*
 //old code
 
 const pool = require("../config/db");
@@ -177,6 +180,8 @@ module.exports = {
   getProductsByCategory,
   searchProducts,
 };
+
+*/
 
 /***************/
 
@@ -358,3 +363,130 @@ module.exports = {
 };
 
 */
+
+const pool = require("../config/db");
+
+// Get all products using database function (excluding image2-5)
+const getAllProducts = async () => {
+  const result = await pool.query("SELECT * FROM get_all_products()");
+  return result.rows;
+};
+
+// Get a product by ID using database function (including all images)
+const getProductById = async (id) => {
+  const result = await pool.query("SELECT * FROM get_product_by_id($1)", [id]);
+  return result.rows[0];
+};
+
+// Add a new product using database function
+const addProduct = async ({
+  name,
+  description,
+  old_price,
+  discount_price,
+  discount,
+  category,
+  parent_category,
+  sub_category,
+  stock,
+  image,
+  image2,
+  image3,
+  image4,
+  image5,
+  size,
+  color,
+  quantity,
+}) => {
+  const result = await pool.query(
+    `SELECT * FROM add_product(
+      $1, $2, $3, $4, $5,
+      $6, $7, $8, $9,
+      $10, $11, $12, $13, $14,
+      $15, $16, $17
+    )`,
+    [
+      name,
+      description,
+      old_price,
+      discount_price,
+      discount,
+      category,
+      parent_category,
+      sub_category,
+      stock,
+      image,
+      image2,
+      image3,
+      image4,
+      image5,
+      size,
+      color,
+      quantity,
+    ]
+  );
+  return result.rows[0];
+};
+
+// Update a product by ID using database function
+const updateProduct = async (id, data) => {
+  const result = await pool.query(
+    `SELECT * FROM update_product(
+      $1, $2, $3, $4, $5,
+      $6, $7, $8, $9,
+      $10, $11, $12, $13, $14,
+      $15, $16, $17, $18
+    )`,
+    [
+      id,
+      data.name,
+      data.description,
+      data.old_price,
+      data.discount_price,
+      data.discount,
+      data.category,
+      data.parent_category,
+      data.sub_category,
+      data.stock,
+      data.image,
+      data.image2,
+      data.image3,
+      data.image4,
+      data.image5,
+      data.size,
+      data.color,
+      data.quantity,
+    ]
+  );
+  return result.rows[0];
+};
+
+// Delete a product by ID using database function
+const deleteProduct = async (id) => {
+  await pool.query("SELECT delete_product($1)", [id]);
+};
+
+// Get products by category using database function (excluding image2-5)
+const getProductsByCategory = async (category, parent_category, sub_category) => {
+  const result = await pool.query(
+    "SELECT * FROM get_products_by_category($1, $2, $3)",
+    [category, parent_category, sub_category]
+  );
+  return result.rows;
+};
+
+// Search products using database function (excluding image2-5)
+const searchProducts = async (keyword) => {
+  const result = await pool.query("SELECT * FROM search_products($1)", [keyword]);
+  return result.rows;
+};
+
+module.exports = {
+  getAllProducts,
+  getProductById,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+  getProductsByCategory,
+  searchProducts,
+};

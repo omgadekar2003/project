@@ -1,3 +1,5 @@
+/* // current working code:
+
 const express = require("express");
 const pool = require("../config/db");
 const router = express.Router();
@@ -60,6 +62,7 @@ router.get("/products", async (req, res) => {
 });
 
 module.exports = router;
+*/
 
 /***************/
 
@@ -111,3 +114,43 @@ router.get('/products', async (req, res) => {
 
 module.exports = router;
 */
+
+
+
+const express = require("express");
+const pool = require("../config/db");
+const router = express.Router();
+const {
+  createProduct,
+  getProducts,
+  getProduct,
+  editProduct,
+  removeProduct,
+  fetchProductsByCategory,
+  searchProductsByName,
+} = require("../controllers/productController");
+const verifyAdmin = require("../middlewares/adminAuth");
+
+// Public routes
+router.get("/search", searchProductsByName);
+router.get("/", getProducts);
+router.get("/filter", fetchProductsByCategory);
+router.get("/:id", getProduct);
+
+// Admin routes
+router.post("/", verifyAdmin, createProduct);
+router.put("/:id", verifyAdmin, editProduct);
+router.delete("/:id", verifyAdmin, removeProduct);
+
+// Extra route using pool directly (using database function)
+router.get('/products', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM get_all_products()");
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+module.exports = router;

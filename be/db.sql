@@ -204,3 +204,372 @@ CREATE TABLE products2 (
 --     image4 = 'https://m.media-amazon.com/images/I/51w2njhy-HL._AC_SY679_.jpg',
 --     image5 = 'https://m.media-amazon.com/images/I/71gZPeYIAjL._AC_SY879_.jpg'
 -- WHERE id = 18;
+
+
+/*  ########### products functions to update code and reduce backend logic */
+/*
+-- Function to get all products (excluding image2-5)
+CREATE OR REPLACE FUNCTION get_all_products()
+RETURNS TABLE (
+    id INTEGER,
+    name TEXT,
+    description TEXT,
+    old_price NUMERIC(10,2),
+    discount_price NUMERIC(10,2),
+    discount INTEGER,
+    category TEXT,
+    parent_category TEXT,
+    sub_category TEXT,
+    stock INTEGER,
+    image TEXT,
+    size TEXT,
+    color TEXT,
+    quantity INTEGER,
+    created_at TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.id, p.name, p.description, p.old_price, p.discount_price, p.discount,
+        p.category, p.parent_category, p.sub_category, p.stock, p.image,
+        p.size, p.color, p.quantity, p.created_at
+    FROM products p
+    ORDER BY p.id ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to get a product by ID (including all images)
+CREATE OR REPLACE FUNCTION get_product_by_id(p_id INTEGER)
+RETURNS TABLE (
+    id INTEGER,
+    name TEXT,
+    description TEXT,
+    old_price NUMERIC(10,2),
+    discount_price NUMERIC(10,2),
+    discount INTEGER,
+    category TEXT,
+    parent_category TEXT,
+    sub_category TEXT,
+    stock INTEGER,
+    image TEXT,
+    image2 TEXT,
+    image3 TEXT,
+    image4 TEXT,
+    image5 TEXT,
+    size TEXT,
+    color TEXT,
+    quantity INTEGER,
+    created_at TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.id, p.name, p.description, p.old_price, p.discount_price, p.discount,
+        p.category, p.parent_category, p.sub_category, p.stock, p.image,
+        p.image2, p.image3, p.image4, p.image5, p.size, p.color, p.quantity,
+        p.created_at
+    FROM products p
+    WHERE p.id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to add a new product
+CREATE OR REPLACE FUNCTION add_product(
+    p_name TEXT,
+    p_description TEXT,
+    p_old_price NUMERIC(10,2),
+    p_discount_price NUMERIC(10,2),
+    p_discount INTEGER,
+    p_category TEXT,
+    p_parent_category TEXT,
+    p_sub_category TEXT,
+    p_stock INTEGER,
+    p_image TEXT,
+    p_image2 TEXT,
+    p_image3 TEXT,
+    p_image4 TEXT,
+    p_image5 TEXT,
+    p_size TEXT,
+    p_color TEXT,
+    p_quantity INTEGER
+)
+RETURNS TABLE (
+    id INTEGER,
+    name TEXT,
+    description TEXT,
+    old_price NUMERIC(10,2),
+    discount_price NUMERIC(10,2),
+    discount INTEGER,
+    category TEXT,
+    parent_category TEXT,
+    sub_category TEXT,
+    stock INTEGER,
+    image TEXT,
+    image2 TEXT,
+    image3 TEXT,
+    image4 TEXT,
+    image5 TEXT,
+    size TEXT,
+    color TEXT,
+    quantity INTEGER,
+    created_at TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    INSERT INTO products (
+        name, description, old_price, discount_price, discount,
+        category, parent_category, sub_category, stock,
+        image, image2, image3, image4, image5,
+        size, color, quantity
+    ) VALUES (
+        p_name, p_description, p_old_price, p_discount_price, p_discount,
+        p_category, p_parent_category, p_sub_category, p_stock,
+        p_image, p_image2, p_image3, p_image4, p_image5,
+        p_size, p_color, p_quantity
+    )
+    RETURNING 
+        products.id, products.name, products.description, products.old_price, 
+        products.discount_price, products.discount, products.category, 
+        products.parent_category, products.sub_category, products.stock, 
+        products.image, products.image2, products.image3, products.image4, 
+        products.image5, products.size, products.color, products.quantity, 
+        products.created_at;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to update a product
+CREATE OR REPLACE FUNCTION update_product(
+    p_id INTEGER,
+    p_name TEXT,
+    p_description TEXT,
+    p_old_price NUMERIC(10,2),
+    p_discount_price NUMERIC(10,2),
+    p_discount INTEGER,
+    p_category TEXT,
+    p_parent_category TEXT,
+    p_sub_category TEXT,
+    p_stock INTEGER,
+    p_image TEXT,
+    p_image2 TEXT,
+    p_image3 TEXT,
+    p_image4 TEXT,
+    p_image5 TEXT,
+    p_size TEXT,
+    p_color TEXT,
+    p_quantity INTEGER
+)
+RETURNS TABLE (
+    id INTEGER,
+    name TEXT,
+    description TEXT,
+    old_price NUMERIC(10,2),
+    discount_price NUMERIC(10,2),
+    discount INTEGER,
+    category TEXT,
+    parent_category TEXT,
+    sub_category TEXT,
+    stock INTEGER,
+    image TEXT,
+    image2 TEXT,
+    image3 TEXT,
+    image4 TEXT,
+    image5 TEXT,
+    size TEXT,
+    color TEXT,
+    quantity INTEGER,
+    created_at TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    UPDATE products
+    SET 
+        name = p_name,
+        description = p_description,
+        old_price = p_old_price,
+        discount_price = p_discount_price,
+        discount = p_discount,
+        category = p_category,
+        parent_category = p_parent_category,
+        sub_category = p_sub_category,
+        stock = p_stock,
+        image = p_image,
+        image2 = p_image2,
+        image3 = p_image3,
+        image4 = p_image4,
+        image5 = p_image5,
+        size = p_size,
+        color = p_color,
+        quantity = p_quantity
+    WHERE id = p_id
+    RETURNING 
+        products.id, products.name, products.description, products.old_price, 
+        products.discount_price, products.discount, products.category, 
+        products.parent_category, products.sub_category, products.stock, 
+        products.image, products.image2, products.image3, products.image4, 
+        products.image5, products.size, products.color, products.quantity, 
+        products.created_at;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to delete a product
+CREATE OR REPLACE FUNCTION delete_product(p_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM products WHERE id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to get products by category (excluding image2-5)
+CREATE OR REPLACE FUNCTION get_products_by_category(
+    p_category TEXT,
+    p_parent_category TEXT,
+    p_sub_category TEXT
+)
+RETURNS TABLE (
+    id INTEGER,
+    name TEXT,
+    description TEXT,
+    old_price NUMERIC(10,2),
+    discount_price NUMERIC(10,2),
+    discount INTEGER,
+    category TEXT,
+    parent_category TEXT,
+    sub_category TEXT,
+    stock INTEGER,
+    image TEXT,
+    size TEXT,
+    color TEXT,
+    quantity INTEGER,
+    created_at TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.id, p.name, p.description, p.old_price, p.discount_price, p.discount,
+        p.category, p.parent_category, p.sub_category, p.stock, p.image,
+        p.size, p.color, p.quantity, p.created_at
+    FROM products p
+    WHERE LOWER(p.category) = LOWER(p_category)
+    AND LOWER(p.parent_category) = LOWER(p_parent_category)
+    AND LOWER(p.sub_category) = LOWER(p_sub_category);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to search products by name (excluding image2-5)
+CREATE OR REPLACE FUNCTION search_products(p_keyword TEXT)
+RETURNS TABLE (
+    id INTEGER,
+    name TEXT,
+    description TEXT,
+    old_price NUMERIC(10,2),
+    discount_price NUMERIC(10,2),
+    discount INTEGER,
+    category TEXT,
+    parent_category TEXT,
+    sub_category TEXT,
+    stock INTEGER,
+    image TEXT,
+    size TEXT,
+    color TEXT,
+    quantity INTEGER,
+    created_at TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.id, p.name, p.description, p.old_price, p.discount_price, p.discount,
+        p.category, p.parent_category, p.sub_category, p.stock, p.image,
+        p.size, p.color, p.quantity, p.created_at
+    FROM products p
+    WHERE p.name ILIKE '%' || p_keyword || '%';
+END;
+$$ LANGUAGE plpgsql;
+
+*/
+
+/* ####### For cart new functions:*/
+
+/*
+-- Function to check if an item exists in the user's cart
+CREATE OR REPLACE FUNCTION find_cart_item(p_user_id INTEGER, p_product_id INTEGER)
+RETURNS TABLE (
+    id INTEGER,
+    user_id INTEGER,
+    product_id INTEGER,
+    quantity INTEGER,
+    created_at TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT ci.id, ci.user_id, ci.product_id, ci.quantity, ci.created_at
+    FROM cart_items ci
+    WHERE ci.user_id = p_user_id AND ci.product_id = p_product_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to insert a new cart item
+CREATE OR REPLACE FUNCTION insert_cart_item(p_user_id INTEGER, p_product_id INTEGER, p_quantity INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO cart_items (user_id, product_id, quantity)
+    VALUES (p_user_id, p_product_id, p_quantity);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to update the quantity of an existing cart item
+CREATE OR REPLACE FUNCTION update_cart_item_quantity(p_quantity INTEGER, p_user_id INTEGER, p_product_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE cart_items
+    SET quantity = quantity + p_quantity
+    WHERE user_id = p_user_id AND product_id = p_product_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to get all cart items for a user with product details
+CREATE OR REPLACE FUNCTION get_user_cart_items(p_user_id INTEGER)
+RETURNS TABLE (
+    cart_item_id INTEGER,
+    quantity INTEGER,
+    product_id INTEGER,
+    product_name TEXT,
+    product_price NUMERIC(10,2),
+    product_image TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        ci.id AS cart_item_id,
+        ci.quantity,
+        p.id AS product_id,
+        p.name AS product_name,
+        p.discount_price AS product_price,
+        p.image AS product_image
+    FROM cart_items ci
+    JOIN products p ON ci.product_id = p.id
+    WHERE ci.user_id = p_user_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to delete a cart item by ID
+CREATE OR REPLACE FUNCTION delete_cart_item(p_item_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM cart_items WHERE id = p_item_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to remove multiple cart items by product IDs
+CREATE OR REPLACE FUNCTION remove_items_from_cart(p_user_id INTEGER, p_product_ids INTEGER[])
+RETURNS VOID AS $$
+BEGIN
+    IF p_product_ids IS NOT NULL AND array_length(p_product_ids, 1) > 0 THEN
+        DELETE FROM cart_items
+        WHERE user_id = p_user_id AND product_id = ANY(p_product_ids);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+*/
+
+
+
