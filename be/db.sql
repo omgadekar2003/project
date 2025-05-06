@@ -169,3 +169,38 @@ CREATE TABLE products2 (
 );
 */
 
+
+
+
+--ALTER TABLE products
+-- ADD COLUMN image2 TEXT,
+-- ADD COLUMN image3 TEXT,
+-- ADD COLUMN image4 TEXT,
+-- ADD COLUMN image5 TEXT;
+
+
+-- UPDATE products
+-- SET image  = 'https://m.media-amazon.com/images/I/51F5u6X1yXL._AC_SX679_.jpg',
+--     image2 = 'https://m.media-amazon.com/images/I/61RL7xQy4oL._AC_SX679_.jpg',
+--     image3 = 'https://m.media-amazon.com/images/I/81lVNw6avQL._AC_SY679_.jpg',
+--     image4 = 'https://m.media-amazon.com/images/I/71mDAkHh3mL._AC_SX679_.jpg',
+--     image5 = 'https://m.media-amazon.com/images/I/71-6QfSuNjL._AC_SX679_.jpg'
+-- WHERE id = 2;
+
+
+-- UPDATE products
+-- SET image  = 'https://m.media-amazon.com/images/I/71CDVUoAjnL._AC_SY879_.jpg',
+--     image2 = 'https://m.media-amazon.com/images/I/71Tn30R6T+L._AC_SY679_.jpg',
+--     image3 = 'https://m.media-amazon.com/images/I/71Tn30R6T+L._AC_SY679_.jpg',
+--     image4 = 'https://m.media-amazon.com/images/I/71vu2RkpKAL._AC_SY679_.jpg',
+--     image5 = 'https://m.media-amazon.com/images/I/71hPL0-+tJL._AC_SY679_.jpg'
+-- WHERE id = 17;
+
+
+-- UPDATE products
+-- SET image  = 'https://m.media-amazon.com/images/I/41e45Ek1WqL._AC_SY879_.jpg',
+--     image2 = 'https://m.media-amazon.com/images/I/51GkkQ-6NoL._AC_SY679_.jpg',
+--     image3 = 'https://m.media-amazon.com/images/I/51vBe8ZBHcL._AC_SY679_.jpg',
+--     image4 = 'https://m.media-amazon.com/images/I/51w2njhy-HL._AC_SY679_.jpg',
+--     image5 = 'https://m.media-amazon.com/images/I/71gZPeYIAjL._AC_SY879_.jpg'
+-- WHERE id = 18;

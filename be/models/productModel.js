@@ -1,27 +1,36 @@
 //old code
 
-
 const pool = require("../config/db");
 
-// Get all products
+// Get all products (excluding extra images)
 const getAllProducts = async () => {
-  const result = await pool.query("SELECT * FROM products ORDER BY id ASC");
+  const result = await pool.query(
+    `SELECT id, name, description, old_price, discount_price, discount, 
+            category, parent_category, sub_category, stock, image, size, 
+            color, quantity, created_at 
+     FROM products ORDER BY id ASC`
+  );
   return result.rows;
 };
 
-// Get all products using a database function
+// Get all products using a database function (excluding extra images)
 const getAllProductsFunction = async () => {
-  const result = await pool.query("SELECT * FROM get_all_products()");
+  const result = await pool.query(
+    `SELECT id, name, description, old_price, discount_price, discount, 
+            category, parent_category, sub_category, stock, image, size, 
+            color, quantity, created_at 
+     FROM get_all_products()`
+  );
   return result.rows;
 };
 
-// Get a product by ID
+// Get a product by ID (including all images)
 const getProductById = async (id) => {
   const result = await pool.query("SELECT * FROM products WHERE id = $1", [id]);
   return result.rows[0];
 };
 
-// Add a new product
+// Add a new product with multiple images
 const addProduct = async ({
   name,
   description,
@@ -33,19 +42,25 @@ const addProduct = async ({
   sub_category,
   stock,
   image,
+  image2,
+  image3,
+  image4,
+  image5,
   size,
   color,
-  quantity
+  quantity,
 }) => {
   const result = await pool.query(
     `INSERT INTO products (
       name, description, old_price, discount_price, discount,
       category, parent_category, sub_category, stock,
-      image, size, color, quantity
+      image, image2, image3, image4, image5,
+      size, color, quantity
     ) VALUES (
       $1, $2, $3, $4, $5,
       $6, $7, $8, $9,
-      $10, $11, $12, $13
+      $10, $11, $12, $13, $14,
+      $15, $16, $17
     ) RETURNING *`,
     [
       name,
@@ -58,15 +73,19 @@ const addProduct = async ({
       sub_category,
       stock,
       image,
+      image2,
+      image3,
+      image4,
+      image5,
       size,
       color,
-      quantity
+      quantity,
     ]
   );
   return result.rows[0];
 };
 
-// Update a product by ID
+// Update a product by ID with multiple images
 const updateProduct = async (id, data) => {
   const result = await pool.query(
     `UPDATE products SET 
@@ -80,10 +99,14 @@ const updateProduct = async (id, data) => {
       sub_category = $8,
       stock = $9,
       image = $10,
-      size = $11,
-      color = $12,
-      quantity = $13
-     WHERE id = $14 RETURNING *`,
+      image2 = $11,
+      image3 = $12,
+      image4 = $13,
+      image5 = $14,
+      size = $15,
+      color = $16,
+      quantity = $17
+     WHERE id = $18 RETURNING *`,
     [
       data.name,
       data.description,
@@ -95,10 +118,14 @@ const updateProduct = async (id, data) => {
       data.sub_category,
       data.stock,
       data.image,
+      data.image2,
+      data.image3,
+      data.image4,
+      data.image5,
       data.size,
       data.color,
       data.quantity,
-      id
+      id,
     ]
   );
   return result.rows[0];
@@ -109,10 +136,17 @@ const deleteProduct = async (id) => {
   await pool.query("DELETE FROM products WHERE id = $1", [id]);
 };
 
-// Get products by category, parent category, and sub-category
-const getProductsByCategory = async (category, parent_category, sub_category) => {
+// Get products by category (excluding extra images)
+const getProductsByCategory = async (
+  category,
+  parent_category,
+  sub_category
+) => {
   const result = await pool.query(
-    `SELECT * FROM products 
+    `SELECT id, name, description, old_price, discount_price, discount, 
+            category, parent_category, sub_category, stock, image, size, 
+            color, quantity, created_at 
+     FROM products 
      WHERE LOWER(category) = LOWER($1) 
      AND LOWER(parent_category) = LOWER($2) 
      AND LOWER(sub_category) = LOWER($3)`,
@@ -121,10 +155,13 @@ const getProductsByCategory = async (category, parent_category, sub_category) =>
   return result.rows;
 };
 
-// Search products by name (case-insensitive)
+// Search products (excluding extra images)
 const searchProducts = async (keyword) => {
   const result = await pool.query(
-    "SELECT * FROM products WHERE name ILIKE '%' || $1 || '%'",
+    `SELECT id, name, description, old_price, discount_price, discount, 
+            category, parent_category, sub_category, stock, image, size, 
+            color, quantity, created_at 
+     FROM products WHERE name ILIKE '%' || $1 || '%'`,
     [keyword]
   );
   return result.rows;
@@ -138,14 +175,12 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByCategory,
-  searchProducts
+  searchProducts,
 };
-
 
 /***************/
 
 // new code for multiple images:
-
 
 /*
 const pool = require("../config/db");

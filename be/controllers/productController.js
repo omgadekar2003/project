@@ -1,4 +1,3 @@
-
 const {
   getAllProducts,
   getProductById,
@@ -7,34 +6,46 @@ const {
   deleteProduct,
   getProductsByCategory,
   searchProducts,
-  getAllProductsFromFunction, // ✅ renamed for clarity
+  getAllProductsFromFunction,
 } = require("../models/productModel");
 
-// Create a new product
+// Create a new product (can include multiple images)
 const createProduct = async (req, res) => {
   try {
     const product = await addProduct(req.body);
     res.status(201).json(product);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error adding product", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error adding product", error: err.message });
   }
 };
 
-// Get all products
+// Get all products (excluding image2 to image5)
 const getProducts = async (req, res) => {
   try {
-    const products = await getAllProducts();
+    let products = await getAllProducts();
+    // Filter out additional images for lighter response
+    products = products.map(
+      ({ image2, image3, image4, image5, ...rest }) => rest
+    );
     res.json(products);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching products", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching products", error: err.message });
   }
 };
 
-// Get all products using PostgreSQL function
+// Get all products from PostgreSQL function (excluding image2 to image5)
 const getProductsFromFunction = async (req, res) => {
   try {
-    const products = await getAllProductsFromFunction();
+    let products = await getAllProductsFromFunction();
+    // Filter out additional images
+    products = products.map(
+      ({ image2, image3, image4, image5, ...rest }) => rest
+    );
     res.status(200).json(products);
   } catch (error) {
     console.error("Error fetching products from function:", error);
@@ -42,14 +53,16 @@ const getProductsFromFunction = async (req, res) => {
   }
 };
 
-// Get single product by ID
+// Get a single product by ID (include all images)
 const getProduct = async (req, res) => {
   try {
     const product = await getProductById(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
     res.json(product);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching product", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching product", error: err.message });
   }
 };
 
@@ -59,7 +72,9 @@ const editProduct = async (req, res) => {
     const product = await updateProduct(req.params.id, req.body);
     res.json(product);
   } catch (err) {
-    res.status(500).json({ message: "Error updating product", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error updating product", error: err.message });
   }
 };
 
@@ -69,28 +84,44 @@ const removeProduct = async (req, res) => {
     await deleteProduct(req.params.id);
     res.json({ message: "Product deleted" });
   } catch (err) {
-    res.status(500).json({ message: "Error deleting product", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error deleting product", error: err.message });
   }
 };
 
-// Get products filtered by category
+// Get products by category (excluding image2 to image5)
 const fetchProductsByCategory = async (req, res) => {
   const { category, parent_category, sub_category } = req.query;
 
   if (!category || !parent_category || !sub_category) {
-    return res.status(400).json({ message: "category, parent_category, and sub_category are required" });
+    return res
+      .status(400)
+      .json({
+        message: "category, parent_category, and sub_category are required",
+      });
   }
 
   try {
-    const products = await getProductsByCategory(category, parent_category, sub_category);
+    let products = await getProductsByCategory(
+      category,
+      parent_category,
+      sub_category
+    );
+    // Filter out additional images
+    products = products.map(
+      ({ image2, image3, image4, image5, ...rest }) => rest
+    );
     res.json(products);
   } catch (err) {
     console.error("❌ Error fetching products by category:", err);
-    res.status(500).json({ message: "Error fetching products", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching products", error: err.message });
   }
 };
 
-// Search products by name
+// Search products by name (excluding image2 to image5)
 const searchProductsByName = async (req, res) => {
   const { keyword } = req.query;
 
@@ -99,12 +130,16 @@ const searchProductsByName = async (req, res) => {
   }
 
   try {
-    const products = await searchProducts(keyword);
-
+    let products = await searchProducts(keyword);
     if (products.length === 0) {
-      return res.status(404).json({ message: "No products found for the given keyword." });
+      return res
+        .status(404)
+        .json({ message: "No products found for the given keyword." });
     }
-
+    // Filter out additional images
+    products = products.map(
+      ({ image2, image3, image4, image5, ...rest }) => rest
+    );
     res.json(products);
   } catch (err) {
     console.error("Error searching products:", err);
@@ -120,10 +155,8 @@ module.exports = {
   removeProduct,
   fetchProductsByCategory,
   searchProductsByName,
-  getProductsFromFunction, // ✅ exported cleanly
+  getProductsFromFunction,
 };
-
-
 
 /***************/
 
